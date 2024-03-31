@@ -1,9 +1,16 @@
+// to avoid require we can also use "type": "module", in package.json outside the client folder
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
 const Product = require("./models/Item.models");
 const productRoute = require("./routes/product.route.js");
+const dotenv = require("./dotenv");
+const authRoutes = require("./routes/auth.route.js");
+const userRoutes = require("./routes/user.route.js");
+
+dotenv.config();
 // Middleware for parsing JSON requests
+
 app.use(express.json());
 
 // to accept form data
@@ -11,10 +18,25 @@ app.use(express.urlencoded({ extended: false }));
 
 // routes
 app.use("/api/products", productRoute);
+app.use("/api/user", userRoutes);
+app.use("/api/auth", authRoutes);
+
+
+app.use((err, req, res, next) => {
+  const statusCode = err.statusCode || 500;
+  const message = err.message || 'Internal Server Error';
+  return res.status(statusCode).json({
+    success: false,
+    message,
+    statusCode,
+  });
+});
 
 app.get("/", (req, res) => {
   res.send("Backend is working successfully");
 });
+
+
 
 // // GET operation to fetch all products
 // app.get("/api/products", async (req, res) => {
