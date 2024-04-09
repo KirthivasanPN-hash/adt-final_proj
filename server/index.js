@@ -7,6 +7,9 @@ const productRoute = require("./routes/product.route.js");
 const dotenv = require("./dotenv");
 const authRoutes = require("./routes/auth.route.js");
 const userRoutes = require("./routes/user.route.js");
+const supplyRoutes = require("./routes/supplier.route.js");
+const transactionRoutes = require("./routes/transaction.route.js");
+const orderRoutes = require("./routes/order.route.js");
 
 dotenv.config();
 // Middleware for parsing JSON requests
@@ -20,11 +23,14 @@ app.use(express.urlencoded({ extended: false }));
 app.use("/api/products", productRoute);
 app.use("/api/user", userRoutes);
 app.use("/api/auth", authRoutes);
-
+app.use("/api/user", userRoutes);
+app.use("/api/supply", supplyRoutes);
+app.use("/api/transaction", transactionRoutes);
+app.use("/api/orders", orderRoutes);
 
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500;
-  const message = err.message || 'Internal Server Error';
+  const message = err.message || "Internal Server Error";
   return res.status(statusCode).json({
     success: false,
     message,
@@ -35,8 +41,6 @@ app.use((err, req, res, next) => {
 app.get("/", (req, res) => {
   res.send("Backend is working successfully");
 });
-
-
 
 // // GET operation to fetch all products
 // app.get("/api/products", async (req, res) => {
